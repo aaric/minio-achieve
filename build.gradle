@@ -1,0 +1,75 @@
+plugins {
+    id "java"
+    id "io.freefair.lombok" version "6.4.3"
+    id "io.spring.dependency-management" version "1.0.12.RELEASE"
+}
+
+group = "com.sample"
+version = "0.1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    maven { url "https://maven.aliyun.com/repository/public" }
+    maven { url "https://repository.incarcloud.com/content/groups/public" }
+}
+
+dependencies {
+    implementation "org.slf4j:slf4j-api"
+    implementation "org.slf4j:slf4j-simple"
+
+    implementation "io.minio:minio"
+
+    testImplementation "org.junit.jupiter:junit-jupiter"
+}
+
+dependencyManagement {
+    dependencies {
+        dependencySet(group: "org.slf4j", version: "1.7.36") {
+            entry "slf4j-api"
+            entry "slf4j-simple"
+        }
+
+        dependency "org.junit.jupiter:junit-jupiter:5.8.2"
+        dependency "io.minio:minio:8.4.3"
+    }
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+compileTestJava {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task removeLombokConfig() {
+    def subProjectPath = project.projectDir
+    if (null != subProjectPath) {
+        def lombokConfigFile = new File(subProjectPath, "lombok.config")
+        if (lombokConfigFile.exists()) {
+            lombokConfigFile.delete()
+        }
+    }
+}
+
+task removeOutputLog() {
+    def subProjectPath = project.projectDir
+    if (null != subProjectPath) {
+        def logPath = new File(subProjectPath, "output.log")
+        if (logPath.exists()) {
+            logPath.delete()
+        }
+    }
+}
+
+defaultTasks "assemble"
