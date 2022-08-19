@@ -32,8 +32,11 @@ public class MinioClientTests {
     }
 
     @Test
-    public void testBucketExists() throws Exception {
+    public void testBucket() throws Exception {
         BucketExistsArgs args = BucketExistsArgs.builder().bucket(MINIO_BUCKET).build();
+        /*if (!client.bucketExists(args)) {
+            client.makeBucket(MakeBucketArgs.builder().bucket(MINIO_BUCKET).build());
+        }*/
         Assertions.assertTrue(client.bucketExists(args));
     }
 }
