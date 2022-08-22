@@ -50,6 +50,7 @@ public class MinioClientTests {
         Assertions.assertTrue(client.bucketExists(args));
     }
 
+    @Disabled
     @Test
     public void testListObjects() throws Exception {
         ListObjectsArgs args = ListObjectsArgs.builder()
@@ -63,6 +64,7 @@ public class MinioClientTests {
         }
     }
 
+    @Disabled
     @Test
     public void testGetObject() throws Exception {
         GetObjectArgs args = GetObjectArgs.builder()
@@ -73,6 +75,7 @@ public class MinioClientTests {
         log.info("testGetObject --> bucket={}, objectName={}, region={}", response.bucket(), response.object(), response.region());
     }
 
+    @Disabled
     @Test
     public void testDownloadObject() throws Exception {
         File downloadFile = new File(ClassLoader.getSystemResource("").getPath() + File.separator + MINIO_TEST_FILENAME);
@@ -85,6 +88,7 @@ public class MinioClientTests {
         client.downloadObject(args);
     }
 
+    @Disabled
     @Test
     public void testUploadObject() throws Exception {
         String testFilename = "banzhuan.jpg";
@@ -98,6 +102,7 @@ public class MinioClientTests {
         log.info("testUploadObject -> testFile={}", testFile.getPath());
     }
 
+    @Disabled
     @Test
     public void testUploadSnowballObjects() throws Exception {
         List<SnowballObject> objects = new ArrayList<>();
@@ -112,6 +117,7 @@ public class MinioClientTests {
         client.uploadSnowballObjects(args);
     }
 
+    @Disabled
     @Test
     public void testRemoveObject() throws Exception {
         RemoveObjectArgs args = RemoveObjectArgs.builder()
