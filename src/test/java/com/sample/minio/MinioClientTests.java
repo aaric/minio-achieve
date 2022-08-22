@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ public class MinioClientTests {
     public static final String MINIO_ACCESS_KEY = "Q3AM3UQ867SPQQA43P2F";
     public static final String MINIO_SECRET_KEY = "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG";
     public static final String MINIO_BUCKET = "yesoo-bucket";
-    public static final String MINIO_TEST_FILE = "test.txt";
+    public static final String MINIO_TEST_FILENAME = "test.txt";
 
     public static MinioClient client;
 
@@ -66,7 +67,7 @@ public class MinioClientTests {
     public void testGetObject() throws Exception {
         GetObjectArgs args = GetObjectArgs.builder()
                 .bucket(MINIO_BUCKET)
-                .object(MINIO_TEST_FILE)
+                .object(MINIO_TEST_FILENAME)
                 .build();
         GetObjectResponse response = client.getObject(args);
         log.info("testGetObject --> bucket={}, objectName={}, region={}", response.bucket(), response.object(), response.region());
@@ -74,25 +75,27 @@ public class MinioClientTests {
 
     @Test
     public void testDownloadObject() throws Exception {
+        File downloadFile = new File(ClassLoader.getSystemResource("").getPath() + File.separator + MINIO_TEST_FILENAME);
+        log.info("testDownloadObject --> downloadFile={}", downloadFile.getPath());
         DownloadObjectArgs args = DownloadObjectArgs.builder()
                 .bucket(MINIO_BUCKET)
-                .object(MINIO_TEST_FILE)
-                .filename(MINIO_TEST_FILE)
+                .object(MINIO_TEST_FILENAME)
+                .filename(downloadFile.getPath())
                 .build();
         client.downloadObject(args);
     }
 
     @Test
     public void testUploadObject() throws Exception {
-        String testFile = "banzhuan.jpg";
-        String testFilePath = ClassLoader.getSystemResource(testFile).getPath();
+        String testFilename = "banzhuan.jpg";
+        File testFile = new File(ClassLoader.getSystemResource(testFilename).getPath());
         UploadObjectArgs args = UploadObjectArgs.builder()
                 .bucket(MINIO_BUCKET)
-                .object(testFile)
-                .filename(testFilePath)
+                .object(testFilename)
+                .filename(testFile.getPath())
                 .build();
         client.uploadObject(args);
-        log.info("{} upload ok", testFilePath);
+        log.info("testUploadObject -> testFile={}", testFile.getPath());
     }
 
     @Test
@@ -107,5 +110,14 @@ public class MinioClientTests {
                 .objects(objects)
                 .build();
         client.uploadSnowballObjects(args);
+    }
+
+    @Test
+    public void testRemoveObject() throws Exception {
+        RemoveObjectArgs args = RemoveObjectArgs.builder()
+                .bucket(MINIO_BUCKET)
+                .object("banzhuan.jpg")
+                .build();
+        client.removeObject(args);
     }
 }
